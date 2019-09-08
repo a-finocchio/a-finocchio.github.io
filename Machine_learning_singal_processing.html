@@ -1,0 +1,216 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Profolio / Machine Learning</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+	 	<!-- Wrapper -->
+		<div id="wrapper">
+
+			<div id="wrapper" class="header">
+				<p> Huixiang Li</p>
+			</div>
+
+			<!-- Nav -->
+			<nav id="nav">
+				<ul class="links">
+					<li class="active"><a href="portfolio.html">PORTFOLIO </a></li>
+					<!-- <li><a href="resorces.html">RESOURCES </a></li> -->
+					<li><a href="AboutMe.html">ABOUT ME</a></li>
+				</ul>
+				<ul class="icons">
+					<li><a href="https://github.com/a-finocchio" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+				</ul>
+			</nav>
+
+			<!-- Main -->
+			<div id="main">
+				<p> Portfolio / Signal processing using machine learning algorithms</p>
+
+				<section class="post">
+
+					<header class="major">					
+						<h2>Signal processing using machine learning algorithms</h2>								
+						<span class="date">Octobet - December, 2018</span>
+					</header>
+
+					<p>A concise write-up for projects in the course Machine Learning for Signal Processing</p>
+				</br> 
+
+					<h2>Face detection</h2>
+						<h3>Proposed Goals</h3>
+						<p>
+							1. implement an Adaboost Classifier to classify between face images and non-face images.</br> 
+							2.	implement a simple face detector that can detect faces in group photos of people.</br> 
+							3.	build a gender detection system using the PCA dimensions from images.		
+						</p>
+					</br> 
+
+
+					<h3>Data set</h3>
+						<p>
+								<a href="http://conradsanderson.id.au/lfwcrop/">LFWCrop database </a> 
+						</p>
+					</br> 
+
+
+					<h3>Part1: Adaboost classifier</h3>
+
+						<p><b>Workflow and Methodology</b>
+						</br>1.	Compute the Eigen-faces from input training face images using SVD method 
+						</br> 	&nbsp &nbsp •	In Matlab: <code>[eigen_Vector, eigen_Value] = eig(covariance_matrix);</code>
+						<div class="image main"><img src="images/Protfolio/MLSP/adaboost_eigens.png" alt="" />
+							<span class="date">Figure &nbsp 1 : &nbsp Eigen-faces</span>
+						</div></p>	
+						<p>2.	Face can be represented by linear combination of Eigenfaces	
+						</br>		&nbsp &nbsp	•	Face_i = a1 * E1 + a2*E2 + …… + an*En
+						</br> 3. Use linear combination of Eigenfaces to represent the non-face images (use pseudo-inverse)
+						</br>		&nbsp &nbsp	•		NFace_i = b1 * E1 + b2*E2 + …… + bn*En
+						</br>		&nbsp &nbsp	•		NFace_Image = Weight * EigenFace
+						</br>		&nbsp &nbsp		•	Weight = NFace_Image * p-inv (EigenFace)
+						</br>4.	Train Adaboost classifier to classifier between face and non-face
+						</br>&nbsp &nbsp	• Since ever image can be represent by a linear combination of the same base, we can reduce calculation loads by only using the weights as input set for training the Adaboost classifier.				
+						<div class="image main"><img src="images/Protfolio/MLSP/adaboost.png" alt="" />
+							<span class="date">Figure &nbsp 2 : &nbsp Adaboost algorithm</span>
+						</div>	
+					</p>                                       
+
+
+						<p><b>Result</b>
+						</br>With the structure of three Eigenface1 classifiers and  Eigenface2 to Eigenface8 classifiers ,	accuracy	is	97.8%
+						</p>
+					</br>
+
+
+					<h3>Part2: Face detector</h3>
+						<p><b>Workflow and Methodology</b>
+						</br>1.	Compute the Eigen-faces from input training face images
+	
+						</br>2.	Scan the group photos and identify all regions that match the pattern of the first Eigenface the most
+						</br>		&nbsp &nbsp	•	Match score = Eigenface · Pattern / |Pattern|
+						</br> 3. Scale the group images into many different sizes and scan them all with the Eigenface
+						
+
+						</br>4.	The locations of faces are likely where the match score has peaks across the group photos
+						</br>&nbsp &nbsp	•	Sometimes, multiple peaks will occur in the same location (or within a few pixels of each other), in which case we can merge them.
+						</br>5. Plot the detected faces in the original group photo images	
+						</br> &nbsp &nbsp Example
+						<div class="image main"><img src="images/Protfolio/MLSP/Face_detection_Beatles.png" alt="" />
+							<span class="date">Figure &nbsp 3 : &nbsp Face detection on Beatles.img</span>
+						</div>	
+					</p>   
+					
+					<p><b>Result</b>
+					</br>With the structure of three Eigenface1 classifiers and  Eigenface2 to Eigenface8 classifiers ,	accuracy	is	97.8%
+					</p>
+
+
+					</br>
+					<h3>Part3: Gender detection</h3>
+						<p><b>Workflow and Methodology</b>
+						</br>1. Find the k best PCA dimensions of this data by performing PCA analysis on the image matrix 
+						</br> &nbsp &nbsp	•	Calculate the eigenvectors and eigenvalues for the correlation matrix of the image matrix
+						</br>2.	Calculate and plot the average male face and the average female face by finding the mean of all the male training images and all the female training images
+						</br> 3.	Project average male and female face on your k PCA dimensions
+						<div class="image main"><img src="images/Protfolio/MLSP/male_female_projection.png" alt="" />
+							<span class="date">Figure &nbsp 4 : &nbsp Face projection</span>
+						</div></p>	
+						<p>
+						</br>4.	Project all testing images on your k PCA dimensions
+						</br>5. 	Classify each testing image as male or female by finding the distance between the weights of each testing image and the weights of average male face and average female face
+						</br> 6. Calculate the accuracy of classification with different values of k,  try  k ∈ {50, 100, 200, 300}
+						</p>
+					</br>
+
+
+					<p><b>Result</b>
+					</br>As	K	increase,	the	accuracy	would	increase, but	the	calculation	time	would	also increase.
+					</br>	There’s	a	small	drop at K=100, I guess it's	because	the	reconstruct	faces	of	male	and	female	are	very	similar	or	confusing in	some	specific	value	of	K,	making	the	detection	performance turn down.	
+						<div class="image main"><img src="images/Protfolio/MLSP/accuracy.png" alt="" /><img src="images/Protfolio/MLSP/accuracy_plot.png" alt="" />
+							<span class="date">Figure &nbsp 5 : &nbsp Accuracy for k  ∈ {50, 100, 200, 300}</span>
+						</div>
+					</p>
+					</br></br>
+
+					<h2> Speaker classification </h2>
+					<h3>Proposed Goals</h3>
+					<p>
+							Use Gaussian Mixture Models for speaker identication, and subsequently use these models to perform speaker classification.
+
+					</p>
+				</br> 
+
+				<h3>Data set</h3>
+				<p>
+						Model training and classification will be performed
+				using <a href="https://en.wikipedia.org/wiki/Mel-frequency_cepstrum"><b>Mel frequency cepstrum vectors</b></a> , which are computed from speech samples collected from ten
+				speakers. Mel frequency cepstral coeefficients (MFCCs) are a way of representing speech signals recorded
+				from human beings.
+				</p>
+			</br> 
+			
+			<h3>Theory and Methodology</h3>
+			
+					<div class="image main"><img src="images/Protfolio/MLSP/EM_algorithm.png" alt="" /><img src="images/Protfolio/MLSP/GMM_classification.png" alt="" />
+					</div>
+			<p>
+					
+			<h3>Workflow and write-up</h3>
+			
+					<div class="image main"><img src="images/Protfolio/MLSP/EM_writeup.png" alt="" /></div>
+					<div class="image main"><img src="images/Protfolio/MLSP/derive_handwriting.png" alt="" /></div>
+			<p>
+
+			</p>
+			
+
+
+
+
+					<h3>Code &nbsp -> &nbsp <a href="https://github.com/a-finocchio/Machine_Learning_Signal_Processing" class="icon brands fa-github"><span class="label">GitHub</span></a></h3>
+					</br>
+
+
+					<h3>Course instructor:</h3>
+
+						<p>Prof. Najim Dehak
+						
+					</br>	
+
+
+				</section>
+
+			</div>
+
+			<!-- Footer -->
+
+
+			<!-- Copyright -->
+			<div id="copyright">
+					<ul><li>Email: lhuixia1@jhu.edu</li></ul>
+					<!-- <ul><li>Phone: (410) 800-7575</li></ul> -->
+			</div>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
